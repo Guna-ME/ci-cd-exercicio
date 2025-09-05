@@ -19,3 +19,4 @@ def test_multiplica_positivo_negativo():
 def test_multiplica_por_zero():
     assert multiplica(0, 5) == 0
     assert multiplica(5, 0) == 0
+    
