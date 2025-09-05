@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   test-and-deploy:
@@ -31,10 +31,17 @@ jobs:
       - name: Run tests
         run: pytest test_app.py
 
-      - name: Build artifact
+      - name: Build artifact (zip)
         run: |
-          chmod +x build.sh
-          ./build.sh
+          zip -r projeto.zip .
+
+      - name: Create Tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag v${{ github.run_number }}
+          git push origin v${{ github.run_number }}
 
       - name: Create GitHub Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
